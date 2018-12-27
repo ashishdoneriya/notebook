@@ -1,0 +1,136 @@
+<!Doctype HTML>
+<html>
+
+<head>
+	<title>Notes</title>
+	<meta charset="utf-8" />
+	<style>
+.list,.sidebar,input{float:left}.button,.list{box-sizing:border-box}.button,.list svg,.list>span,a{cursor:pointer}*,body,html{background-color:#1e1e1e;color:#eee;-webkit-font-smoothing:antialiased;font-family:"Ubuntu Mono"}body{margin:0;overflow:hidden}.container{width:100%}input{font-size:26px;line-height:28px;font-weight:700;border:none;padding:10px 20px;height:25px;width:calc(100% - 362px);width:-moz-calc(100% - 362px);width:-webkit-calc(100% - 362px);width:-o-calc(100% - 362px)}textarea{font-family:FreeSans,"Ubuntu Mono",Arial}.success.container{width:100%}*{background:#272822}.sidebar{border-right:2px solid #aaa;height:100vh;width:320px;overflow:auto}.list{border-bottom:1px dashed #777;color:#eee;display:block;font:18px/28px "Ubuntu Mono";min-height:39px;height:auto;margin-left:10px;margin-right:10px;padding:5px 15px;position:relative;width:298px;-webkit-font-smoothing:antialiased}.mainbody{font-size:16px;line-height:28px;height:100vh;padding-right:0;width:calc(100%-320px);margin-left:320px}.heading{border-bottom:1px dashed #aaa;height:45px}.menu{float:right}textarea{border:none;width:calc(100% - 22px);font-size:20px;line-height:28px;resize:none;padding:10px 0 0 20px;height:-moz-calc(100% - 65px);height:-webkit-calc(100% - 65px);height:-o-calc(100% - 65px);height:calc(100% - 65px)}button:focus,input:focus,select:focus,textarea:focus{outline:0}.deleteButton{color:#F44336}.listOptions{float:right;max-height:29px}.list svg{padding-top:5px}.button{color:#fff;height:28px;text-size-adjust:100%;width:60px;column-rule-color:#fff;perspective-origin:30px 14px;transform-origin:30px 14px;background:#009688;border:0 #fff;border-radius:3px;font:normal normal bold normal 16px/28px "Ubuntu Mono";margin:8px 10px 0 0;outline:#fff 0;padding:0 5px}.dangerBackground{background-color:#F44336}.infoBackground{background-color:#009688}.successBackground,Background{background-color:#4CAF50}.danger{color:#F44336}.info{color:#009688}.success{color:#4CAF50}.heading svg{margin-right:5px}::-webkit-scrollbar{width:12px;background:rgba(0,0,0,.61);border-radius:0}::-webkit-scrollbar:hover{background:rgba(0,0,0,.61)}::-webkit-scrollbar-thumb:vertical{background:rgba(0,0,0,.61);border-radius:0}::-webkit-scrollbar-thumb:vertical:active{background:rgba(0,0,0,.61);border-radius:0}
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"></script>
+</head>
+
+<body>
+	<div id="vapp">
+		<div class="sidebar">
+			<span v-for="title of notesTitle" class="list">
+					<span @click="open(title)">{{title}}</span>
+			<div class="listOptions">
+				<svg @click="download(title)" fill="#4CAF50" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
+							<path d="M0 0h24v24H0z" fill="none" />
+						</svg>
+				<svg @click="deleteNote(title)" fill="#F44336" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
+							<path d="M0 0h24v24H0z" fill="none" />
+						</svg>
+			</div>
+			</span>
+		</div>
+		<div class="mainbody">
+			<div class="heading">
+				<input type="text" v-model="currentTitle" placeholder="Title">
+				<div class="menu">
+					<button class="button infoBackground" @click="newNote()">New</button>
+					<button class="button successBackground" @click="save()">Save</button>
+					<button class="button dangerBackground" @click="deleteNote()">Delete</button>
+				</div>
+			</div>
+			<textarea v-model="content" spellcheck="false" @keyup.19="save()"></textarea>
+		</div>
+	</div>
+
+</body>
+<script>
+	window.addEventListener("load", function() {
+		var app = new Vue({
+			el: '#vapp',
+			data: {
+				content: '',
+				currentTitle: '',
+				notesTitle: [],
+				titleBeforeReplaced: ''
+			},
+			created: function() {
+				this.fillSideBar();
+				document.addEventListener("keydown", (e) => {
+                              	  if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
+                              	  e.preventDefault();
+                              	  this.save();
+                              	  }
+                                }, false);
+			},
+			methods: {
+				fillSideBar() {
+					this.notesTitle = [];
+					while (this.notesTitle.length > 0) {
+						this.notesTitle.pop();
+					}
+					for (var i = 0; i < localStorage.length; i++) {
+						this.notesTitle.push(localStorage.key(i));
+					}
+				},
+
+				open(title) {
+					this.titleBeforeReplaced = title;
+					this.currentTitle = title;
+					this.content = localStorage.getItem(title);
+				},
+
+				newNote() {
+					this.content = '';
+					this.currentTitle = '';
+					this.titleBeforeReplaced = '';
+				},
+
+				save() {
+					if (this.currentTitle == '' &&
+						this.titleBeforeReplaced == '' &&
+						this.content == '') {
+						return;
+					}
+					if (this.currentTitle == '') {
+						this.currentTitle = new Date();
+					}
+					if (this.currentTitle != this.titleBeforeReplaced && this.titleBeforeReplaced != '') {
+						localStorage.removeItem(this.titleBeforeReplaced);
+					}
+					this.titleBeforeReplaced = this.currentTitle;
+					localStorage.setItem(this.currentTitle, this.content);
+					this.fillSideBar();
+				},
+
+				deleteNote(title) {
+					if (title) {
+						// used to delete the note directly for sidebar
+						localStorage.removeItem(title);
+						this.fillSideBar();
+					} else {
+						localStorage.removeItem(this.titleBeforeReplaced);
+						localStorage.removeItem(this.currentTitle);
+						this.fillSideBar();
+						this.content = '';
+						this.currentTitle = '';
+						this.titleBeforeReplaced = '';
+					}
+				},
+
+				download(title) {
+					if (title == null || title == undefined) {
+						this.save();
+						title = this.currentTitle;
+					}
+					var element = document.createElement('a');
+					element.setAttribute('href', 'data:plain/text;charset=utf-8,' +
+						encodeURIComponent(localStorage.getItem(title)));
+					element.setAttribute('download', title + '.txt');
+					document.body.appendChild(element);
+					element.click();
+					document.body.removeChild(element);
+				}
+			}
+		});
+	});
+</script>
+
+</html>
