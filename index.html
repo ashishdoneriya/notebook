@@ -12,7 +12,7 @@
 <body>
 	<div id="vapp">
 		<div class="sidebar">
-			<span v-for="title of notesTitle" class="list">
+			<span v-for="title of notesTitle" class="list" v-if="title != 'darkyMode' && title != 'darkySupported' && title != 'darkyState'">
 					<span @click="open(title)">{{title}}</span>
 			<div class="listOptions">
 				<svg @click="download(title)" fill="#4CAF50" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
