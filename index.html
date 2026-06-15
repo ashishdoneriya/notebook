@@ -1,135 +1,706 @@
-<!Doctype HTML>
-<html>
+<!doctype html>
+<html lang="en">
 <head>
-	<title>Notes</title>
-	<meta charset="utf-8" />
-	<style>
-.list,.sidebar,input{float:left}.button,.list{box-sizing:border-box}.button,.list svg,.list>span,a{cursor:pointer}*,body,html{background-color:#1e1e1e;color:#eee;-webkit-font-smoothing:antialiased;font-family:"Ubuntu Mono"}body{margin:0;overflow:hidden}.container{width:100%}input{font-size:26px;line-height:28px;font-weight:700;border:none;padding:10px 20px;height:25px;width:calc(100% - 362px);width:-moz-calc(100% - 362px);width:-webkit-calc(100% - 362px);width:-o-calc(100% - 362px)}textarea{font-family:"Ubuntu Mono", Arial, Monospace}.success.container{width:100%}*{background:#272822}.sidebar{border-right:2px solid #aaa;height:100vh;width:320px;overflow:auto}.list{border-bottom:1px dashed #777;color:#eee;display:block;font:18px/28px "Ubuntu Mono";min-height:39px;height:auto;margin-left:10px;margin-right:10px;padding:5px 15px;position:relative;width:298px;-webkit-font-smoothing:antialiased}.mainbody{font-size:16px;line-height:28px;height:100vh;padding-right:0;width:calc(100%-320px);margin-left:320px}.heading{border-bottom:1px dashed #aaa;height:45px}.menu{float:right}textarea{border:none;width:calc(100% - 22px);font-size:20px;line-height:28px;resize:none;padding:10px 0 0 20px;height:-moz-calc(100% - 65px);height:-webkit-calc(100% - 65px);height:-o-calc(100% - 65px);height:calc(100% - 65px)}button:focus,input:focus,select:focus,textarea:focus{outline:0}.deleteButton{color:#F44336}.listOptions{float:right;max-height:29px}.list svg{padding-top:5px}.button{color:#fff;height:28px;text-size-adjust:100%;width:60px;column-rule-color:#fff;perspective-origin:30px 14px;transform-origin:30px 14px;background:#009688;border:0 #fff;border-radius:3px;font:normal normal bold normal 16px/28px "Ubuntu Mono";margin:8px 10px 0 0;outline:#fff 0;padding:0 5px}.dangerBackground{background-color:#F44336}.infoBackground{background-color:#009688}.successBackground,Background{background-color:#4CAF50}.danger{color:#F44336}.info{color:#009688}.success{color:#4CAF50}.heading svg{margin-right:5px}::-webkit-scrollbar{width:12px;background:rgba(0,0,0,.61);border-radius:0}::-webkit-scrollbar:hover{background:rgba(0,0,0,.61)}::-webkit-scrollbar-thumb:vertical{background:rgba(0,0,0,.61);border-radius:0}::-webkit-scrollbar-thumb:vertical:active{background:rgba(0,0,0,.61);border-radius:0}
-	</style>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.13/vue.min.js"></script>
-</head>
+	<title>Notebook - Fast Local Markdown Notes App</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Notebook is a fast, private, local-first markdown notes app built with Vue 3 and EasyMDE. Notes are stored in your browser localStorage.">
+	<meta name="application-name" content="Notebook">
+	<meta name="keywords" content="notebook, markdown notes, local notes app, browser notes, Vue notes app, EasyMDE markdown editor">
+	<meta name="author" content="Ashish Doneriya">
+	<meta name="robots" content="index, follow">
+	<meta name="referrer" content="strict-origin-when-cross-origin">
+	<link rel="canonical" href="https://ashishdoneriya.github.io/notebook/">
 
+	<meta property="og:type" content="website">
+	<meta property="og:site_name" content="Notebook">
+	<meta property="og:title" content="Notebook - Fast Local Markdown Notes App">
+	<meta property="og:description" content="A fast, private, local-first markdown notes app built with Vue 3 and EasyMDE.">
+	<meta property="og:url" content="https://ashishdoneriya.github.io/notebook/">
+
+	<meta name="twitter:card" content="summary">
+	<meta name="twitter:title" content="Notebook - Fast Local Markdown Notes App">
+	<meta name="twitter:description" content="A fast, private, local-first markdown notes app built with Vue 3 and EasyMDE.">
+	<meta name="theme-color" content="#272822">
+
+
+	<link rel="dns-prefetch" href="//fonts.googleapis.com">
+	<link rel="dns-prefetch" href="//fonts.gstatic.com">
+	<link rel="dns-prefetch" href="//cdn.jsdelivr.net">
+	<link rel="dns-prefetch" href="//unpkg.com">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="preconnect" href="https://cdn.jsdelivr.net">
+	<link rel="preconnect" href="https://unpkg.com">
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;600&display=swap">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/easymde@2.21.0/dist/easymde.min.css">
+	<script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
+	<script src="https://cdn.jsdelivr.net/npm/easymde@2.21.0/dist/easymde.min.js" defer></script>
+
+	<style>
+		* {
+			box-sizing: border-box;
+		}
+
+		[v-cloak] {
+			display: none !important;
+		}
+
+		html,
+		body {
+			margin: 0;
+			height: 100%;
+			overflow: hidden;
+			background: #272822;
+			color: #eee;
+			font-family: "Ubuntu", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			font-weight: 400;
+			-webkit-font-smoothing: antialiased;
+		}
+
+		button,
+		input,
+		textarea {
+			font: inherit;
+		}
+
+		button:focus,
+		input:focus,
+		textarea:focus {
+			outline: none;
+		}
+
+		#vapp {
+			display: flex;
+			height: 100vh;
+			width: 100vw;
+		}
+
+		.sidebar {
+			width: 320px;
+			height: 100vh;
+			overflow: auto;
+			border-right: 2px solid #aaa;
+			background: #272822;
+			flex: 0 0 320px;
+		}
+
+		.note-list-item {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			min-height: 39px;
+			margin: 0 10px;
+			padding: 5px 15px;
+			border-bottom: 1px dashed #777;
+			color: #eee;
+			font-size: 18px;
+			font-weight: 500;
+			line-height: 28px;
+		}
+
+		.note-title {
+			flex: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			cursor: pointer;
+		}
+
+		.note-title.active {
+			color: #4CAF50;
+		}
+
+		.list-options {
+			display: flex;
+			gap: 4px;
+			flex: 0 0 auto;
+		}
+
+		.icon-button {
+			width: 24px;
+			height: 24px;
+			padding: 0;
+			border: 0;
+			background: transparent;
+			cursor: pointer;
+		}
+
+		.mainbody {
+			display: flex;
+			flex-direction: column;
+			height: 100vh;
+			min-width: 0;
+			flex: 1;
+			background: #272822;
+		}
+
+		.heading {
+			display: flex;
+			align-items: center;
+			height: 45px;
+			border-bottom: 1px dashed #aaa;
+			flex: 0 0 45px;
+		}
+
+		.title-input {
+			height: 44px;
+			min-width: 0;
+			flex: 1;
+			border: none;
+			padding: 8px 16px;
+			background: #272822;
+			color: #eee;
+			font-size: 24px;
+			font-weight: 600;
+			line-height: 28px;
+		}
+
+		.menu {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 0 10px;
+			flex: 0 0 auto;
+		}
+
+		.button {
+			min-width: 60px;
+			height: 28px;
+			border: 0;
+			border-radius: 3px;
+			padding: 0 8px;
+			color: #fff;
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 28px;
+			cursor: pointer;
+		}
+
+		.danger-background {
+			background: #F44336;
+		}
+
+		.info-background {
+			background: #009688;
+		}
+
+		.success-background {
+			background: #4CAF50;
+		}
+
+		.editor-shell {
+			min-height: 0;
+			flex: 1;
+			background: #272822;
+		}
+
+		.editor-shell .EasyMDEContainer {
+			display: flex;
+			flex-direction: column;
+			height: 100%;
+			background: #272822;
+			color: #eee;
+		}
+
+		.editor-shell .editor-toolbar {
+			border: 0;
+			border-bottom: 1px dashed #777;
+			background: #1e1e1e;
+			opacity: 1;
+		}
+
+		.editor-shell .editor-toolbar::before,
+		.editor-shell .editor-toolbar::after {
+			display: none;
+		}
+
+		.editor-shell .editor-toolbar button {
+			color: #eee !important;
+			background: #1e1e1e;
+			border-color: transparent;
+		}
+
+		.editor-shell .editor-toolbar button:hover,
+		.editor-shell .editor-toolbar button.active {
+			background: #333;
+			border-color: #555;
+		}
+
+		.editor-shell .CodeMirror {
+			flex: 1;
+			height: auto;
+			border: 0;
+			background: #272822;
+			color: #eee;
+			font-family: "Ubuntu", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+			font-size: 1.2rem;
+			font-weight: 500;
+			line-height: 1.55;
+		}
+
+		.editor-shell .CodeMirror pre,
+		.editor-shell .CodeMirror-code,
+		.editor-shell .cm-header,
+		.editor-shell .cm-quote,
+		.editor-shell .cm-comment,
+		.editor-shell .cm-code {
+			font-family: "Ubuntu", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+
+		.editor-shell .CodeMirror-scroll {
+			min-height: 100%;
+		}
+
+		.editor-shell .CodeMirror-cursor {
+			border-left: 1px solid #eee;
+		}
+
+		.editor-shell .CodeMirror-selected {
+			background: #4b4b4b !important;
+		}
+
+		.editor-shell .CodeMirror-gutters {
+			background: #272822;
+			border-right: 1px solid #555;
+		}
+
+		.editor-shell .CodeMirror-linenumber {
+			color: #888;
+		}
+
+		.editor-shell .cm-header {
+			color: #4CAF50;
+			font-weight: 400;
+			line-height: 1.4;
+		}
+
+		.editor-shell .cm-header-1 {
+			font-size: 1.8rem;
+		}
+
+		.editor-shell .cm-header-2 {
+			font-size: 1.6rem;
+		}
+
+		.editor-shell .cm-header-3 {
+			font-size: 1.4rem;
+		}
+
+		.editor-shell .cm-header-4 {
+			font-size: 1.2rem;
+		}
+
+		.editor-shell .cm-strong {
+			color: #fff;
+			font-weight: 400;
+		}
+
+		.editor-shell .cm-em {
+			color: #ddd;
+			font-style: italic;
+		}
+
+		.editor-shell .cm-link,
+		.editor-shell .cm-url {
+			color: #03A9F4;
+			text-decoration: underline;
+		}
+
+		.editor-shell .cm-quote {
+			color: #aaa;
+			font-style: italic;
+		}
+
+		.editor-shell .cm-comment,
+		.editor-shell .cm-code {
+			color: #FFC107;
+			background: #1e1e1e;
+		}
+
+		.editor-shell .editor-statusbar {
+			border-top: 1px dashed #777;
+			color: #aaa;
+			background: #1e1e1e;
+		}
+
+		::-webkit-scrollbar {
+			width: 12px;
+			height: 12px;
+			background: rgba(0, 0, 0, .61);
+		}
+
+		::-webkit-scrollbar-thumb {
+			background: rgba(0, 0, 0, .61);
+			border-radius: 0;
+		}
+
+		.editor-shell .CodeMirror pre,
+		.editor-shell .CodeMirror span {
+			font-family: "Ubuntu", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+		}
+
+		.editor-shell .CodeMirror,
+		.editor-shell .CodeMirror pre,
+		.editor-shell .CodeMirror span {
+			font-size: 1.2rem;
+			font-weight: 500;
+		}
+
+		.editor-shell .CodeMirror .cm-header-1,
+		.editor-shell .CodeMirror .HyperMD-header-1 {
+			font-size: 1.8rem;
+			font-weight: 600;
+		}
+
+		.editor-shell .CodeMirror .cm-header-2,
+		.editor-shell .CodeMirror .HyperMD-header-2 {
+			font-size: 1.6rem;
+			font-weight: 600;
+		}
+
+		.editor-shell .CodeMirror .cm-header-3,
+		.editor-shell .CodeMirror .HyperMD-header-3 {
+			font-size: 1.4rem;
+			font-weight: 600;
+		}
+
+		.editor-shell .CodeMirror .cm-header-4,
+		.editor-shell .CodeMirror .HyperMD-header-4 {
+			font-size: 1.2rem;
+			font-weight: 600;
+		}
+
+		.editor-shell .CodeMirror .cm-strong,
+		.editor-shell .CodeMirror .cm-formatting-strong {
+			font-weight: 600;
+		}
+
+		.visually-hidden {
+			position: absolute;
+			width: 1px;
+			height: 1px;
+			padding: 0;
+			margin: -1px;
+			overflow: hidden;
+			clip: rect(0, 0, 0, 0);
+			white-space: nowrap;
+			border: 0;
+		}
+
+	</style>
+
+	<script type="application/ld+json">
+	{
+		"@context": "https://schema.org",
+		"@type": "WebApplication",
+		"name": "Notebook",
+		"url": "https://ashishdoneriya.github.io/notebook/",
+		"applicationCategory": "ProductivityApplication",
+		"operatingSystem": "Any",
+		"description": "A fast, private, local-first markdown notes app built with Vue 3 and EasyMDE.",
+		"author": {
+			"@type": "Person",
+			"name": "Ashish Doneriya"
+		},
+		"offers": {
+			"@type": "Offer",
+			"price": "0",
+			"priceCurrency": "USD"
+		}
+	}
+	</script>
+
+</head>
 <body>
-	<div id="vapp">
-		<div class="sidebar">
-			<span v-for="title of notesTitle" class="list" v-if="title != 'darkyMode' && title != 'darkySupported' && title != 'darkyState'">
-					<span @click="open(title)">{{title}}</span>
-			<div class="listOptions">
-				<svg @click="download(title)" fill="#4CAF50" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-							<path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" />
-							<path d="M0 0h24v24H0z" fill="none" />
+	<noscript>
+		<main style="padding:24px;font-family:Ubuntu,system-ui,sans-serif;color:#eee;background:#272822;min-height:100vh">
+			<h1>Notebook - Fast Local Markdown Notes App</h1>
+			<p>Notebook is a private, local-first markdown notes app. Enable JavaScript to use the editor and save notes in your browser.</p>
+		</main>
+	</noscript>
+
+	<main id="vapp" v-cloak aria-label="Notebook markdown notes app">
+		<h1 class="visually-hidden">Notebook - Fast Local Markdown Notes App</h1>
+		<aside class="sidebar">
+			<div
+				v-for="title in notesTitle"
+				:key="title"
+				class="note-list-item"
+			>
+				<span
+					class="note-title"
+					:class="{ active: title === titleBeforeReplaced }"
+					:title="title"
+					@click="open(title)"
+				>{{ title }}</span>
+
+				<div class="list-options">
+					<button class="icon-button" type="button" title="Download" @click="download(title)">
+						<svg fill="#4CAF50" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"></path>
+							<path d="M0 0h24v24H0z" fill="none"></path>
 						</svg>
-				<svg @click="deleteNote(title)" fill="#F44336" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
-							<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" />
-							<path d="M0 0h24v24H0z" fill="none" />
+					</button>
+
+					<button class="icon-button" type="button" title="Delete" @click="deleteNote(title)">
+						<svg fill="#F44336" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg">
+							<path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"></path>
+							<path d="M0 0h24v24H0z" fill="none"></path>
 						</svg>
-			</div>
-			</span>
-		</div>
-		<div class="mainbody">
-			<div class="heading">
-				<input type="text" v-model="currentTitle" placeholder="Title">
-				<div class="menu">
-					<button class="button infoBackground" @click="newNote()">New</button>
-					<button class="button successBackground" @click="save()">Save</button>
-					<button class="button dangerBackground" @click="deleteNote()">Delete</button>
+					</button>
 				</div>
 			</div>
-			<textarea v-model="content" spellcheck="false" @keyup.19="save()"></textarea>
-		</div>
+		</aside>
+
+		<main class="mainbody">
+			<div class="heading">
+				<input
+					class="title-input"
+					type="text"
+					v-model="currentTitle"
+					placeholder="Title"
+					@keydown.ctrl.s.prevent="save"
+					@keydown.meta.s.prevent="save"
+				>
+
+				<div class="menu">
+					<button class="button info-background" type="button" @click="newNote">New</button>
+					<button class="button success-background" type="button" @click="save">Save</button>
+					<button class="button danger-background" type="button" @click="deleteNote()">Delete</button>
+				</div>
+			</div>
+
+			<section class="editor-shell">
+				<textarea ref="editor" spellcheck="false"></textarea>
+			</section>
+		</main>
 	</div>
 
-</body>
-<script>
-	window.addEventListener("load", function() {
-		var app = new Vue({
-			el: '#vapp',
-			data: {
-				content: '',
-				currentTitle: '',
-				notesTitle: [],
-				titleBeforeReplaced: ''
+	<script>
+		window.addEventListener('DOMContentLoaded', () => {
+			if (!window.Vue || !window.EasyMDE) {
+				document.body.innerHTML = '<div style="padding:20px;font-family:Ubuntu,system-ui;color:#eee;background:#272822;min-height:100vh">Failed to load Vue or EasyMDE from CDN.</div>';
+				return;
+			}
+
+			const ignoredStorageKeys = new Set(['darkyMode', 'darkySupported', 'darkyState']);
+
+		const app = Vue.createApp({
+			data() {
+				return {
+					content: '',
+					currentTitle: '',
+					notesTitle: [],
+					titleBeforeReplaced: '',
+					editor: null
+				};
 			},
-			created: function() {
+
+			created() {
 				this.fillSideBar();
-				document.addEventListener("keydown", (e) => {
-                              	  if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)  && e.keyCode == 83) {
-                              	  e.preventDefault();
-                              	  this.save();
-                              	  }
-                                }, false);
 			},
+
+			mounted() {
+				this.initMarkdownEditor();
+				document.addEventListener('keydown', this.handleGlobalSaveShortcut, false);
+			},
+
+			beforeUnmount() {
+				document.removeEventListener('keydown', this.handleGlobalSaveShortcut, false);
+
+				if (this.editor) {
+					this.editor.toTextArea();
+					this.editor = null;
+				}
+			},
+
 			methods: {
+				initMarkdownEditor() {
+					this.editor = new EasyMDE({
+						element: this.$refs.editor,
+						initialValue: this.content,
+						autofocus: true,
+						spellChecker: false,
+						forceSync: true,
+						nativeSpellcheck: false,
+						status: ['lines', 'words', 'cursor'],
+						minHeight: 'calc(100vh - 92px)',
+						toolbar: [
+							'bold',
+							'italic',
+							'strikethrough',
+							'heading',
+							'|',
+							'quote',
+							'unordered-list',
+							'ordered-list',
+							'|',
+							'code',
+							'link',
+							'image',
+							'table',
+							'horizontal-rule',
+							'|',
+							'clean-block',
+							'|',
+							'guide'
+						],
+						renderingConfig: {
+							singleLineBreaks: false,
+							codeSyntaxHighlighting: true
+						}
+					});
+
+					this.editor.codemirror.on('change', () => {
+						this.content = this.editor.value();
+					});
+
+					this.editor.codemirror.setOption('extraKeys', {
+						'Ctrl-S': () => this.save(),
+						'Cmd-S': () => this.save()
+					});
+				},
+
 				fillSideBar() {
-					this.notesTitle = [];
-					while (this.notesTitle.length > 0) {
-						this.notesTitle.pop();
-					}
-					for (var i = 0; i < localStorage.length; i++) {
-						this.notesTitle.push(localStorage.key(i));
-					}
+					this.notesTitle = Object.keys(localStorage)
+						.filter((key) => !ignoredStorageKeys.has(key))
+						.sort((first, second) => first.localeCompare(second));
 				},
 
 				open(title) {
+					const noteContent = localStorage.getItem(title) || '';
+
 					this.titleBeforeReplaced = title;
 					this.currentTitle = title;
-					this.content = localStorage.getItem(title);
+					this.content = noteContent;
+					this.setEditorValue(noteContent);
 				},
 
 				newNote() {
 					this.content = '';
 					this.currentTitle = '';
 					this.titleBeforeReplaced = '';
+					this.setEditorValue('');
+					this.focusEditor();
 				},
 
 				save() {
-					if (this.currentTitle == '' &&
-						this.titleBeforeReplaced == '' &&
-						this.content == '') {
+					this.syncFromEditor();
+
+					if (!this.currentTitle.trim() && !this.titleBeforeReplaced && !this.content.trim()) {
 						return;
 					}
-					if (this.currentTitle == '') {
-						this.currentTitle = new Date();
+
+					if (!this.currentTitle.trim()) {
+						this.currentTitle = new Date().toISOString().replace('T', ' ').slice(0, 19);
 					}
-					if (this.currentTitle != this.titleBeforeReplaced && this.titleBeforeReplaced != '') {
+
+					const nextTitle = this.currentTitle.trim();
+
+					if (nextTitle !== this.titleBeforeReplaced && this.titleBeforeReplaced) {
 						localStorage.removeItem(this.titleBeforeReplaced);
 					}
-					this.titleBeforeReplaced = this.currentTitle;
-					localStorage.setItem(this.currentTitle, this.content);
+
+					this.currentTitle = nextTitle;
+					this.titleBeforeReplaced = nextTitle;
+					localStorage.setItem(nextTitle, this.content);
 					this.fillSideBar();
 				},
 
 				deleteNote(title) {
 					if (title) {
-						// used to delete the note directly for sidebar
 						localStorage.removeItem(title);
+
+						if (title === this.titleBeforeReplaced) {
+							this.newNote();
+						}
+
 						this.fillSideBar();
-					} else {
-						localStorage.removeItem(this.titleBeforeReplaced);
-						localStorage.removeItem(this.currentTitle);
-						this.fillSideBar();
-						this.content = '';
-						this.currentTitle = '';
-						this.titleBeforeReplaced = '';
+						return;
 					}
+
+					if (this.titleBeforeReplaced) {
+						localStorage.removeItem(this.titleBeforeReplaced);
+					}
+
+					if (this.currentTitle) {
+						localStorage.removeItem(this.currentTitle);
+					}
+
+					this.newNote();
+					this.fillSideBar();
 				},
 
 				download(title) {
-					if (title == null || title == undefined) {
+					if (title === null || title === undefined) {
 						this.save();
 						title = this.currentTitle;
 					}
-					var element = document.createElement('a');
-					element.setAttribute('href', 'data:plain/text;charset=utf-8,' +
-						encodeURIComponent(localStorage.getItem(title)));
-					element.setAttribute('download', title + '.txt');
+
+					if (!title) {
+						return;
+					}
+
+					const noteContent = localStorage.getItem(title) || '';
+					const blob = new Blob([noteContent], { type: 'text/markdown;charset=utf-8' });
+					const element = document.createElement('a');
+					const safeTitle = this.safeFileName(title);
+
+					element.href = URL.createObjectURL(blob);
+					element.download = `${safeTitle}.md`;
 					document.body.appendChild(element);
 					element.click();
+					URL.revokeObjectURL(element.href);
 					document.body.removeChild(element);
+				},
+
+				setEditorValue(value) {
+					if (!this.editor) {
+						return;
+					}
+
+					if (this.editor.value() !== value) {
+						this.editor.value(value);
+					}
+				},
+
+				syncFromEditor() {
+					if (this.editor) {
+						this.content = this.editor.value();
+					}
+				},
+
+				focusEditor() {
+					this.$nextTick(() => {
+						if (this.editor) {
+							this.editor.codemirror.focus();
+						}
+					});
+				},
+
+				handleGlobalSaveShortcut(event) {
+					const isSaveShortcut = (navigator.platform.match('Mac') ? event.metaKey : event.ctrlKey) && event.key.toLowerCase() === 's';
+
+					if (isSaveShortcut) {
+						event.preventDefault();
+						this.save();
+					}
+				},
+
+				safeFileName(name) {
+					return String(name)
+						.trim()
+						.replace(/[\\/:*?"<>|]/g, '-')
+						.replace(/\s+/g, ' ')
+						.slice(0, 120) || 'note';
 				}
 			}
 		});
-	});
-</script>
 
+			app.mount('#vapp');
+		});
+	</script>
+</body>
 </html>
